@@ -1,0 +1,26 @@
+name: Compilar binario PE vulnerable
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Instalar MinGW
+      run: choco install mingw -y
+      
+    - name: Compilar binario vulnerable
+      run: |
+        "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\gcc.exe" vulnerable.c -o vulnerable.exe -fno-stack-protector -mno-ssl-protector -Wl,--disable-dynamicbase -static
+        
+    - name: Subir artefacto
+      uses: actions/upload-artifact@v3
+      with:
+        name: vulnerable-binary
+        path: vulnerable.exe
