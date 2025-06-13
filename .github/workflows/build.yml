@@ -10,7 +10,7 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Instalar MinGW
       run: choco install mingw -y
@@ -20,7 +20,7 @@ jobs:
         "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\gcc.exe" vulnerable.c -o vulnerable.exe -fno-stack-protector -mno-ssl-protector -Wl,--disable-dynamicbase -static
         
     - name: Subir artefacto
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: vulnerable-binary
         path: vulnerable.exe
