@@ -18,7 +18,7 @@ jobs:
     - name: Compilar binario vulnerable
       run: |
         $gcc = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\gcc.exe"
-        & $gcc vulnerable.c -o vulnerable.exe -fno-stack-protector -Wl,--disable-dynamicbase -static
+        & $gcc vulnerable.c -o vulnerable.exe -fno-stack-protector -Wl --disable-dynamicbase -static
         
     - name: Subir artefacto
       uses: actions/upload-artifact@v4
