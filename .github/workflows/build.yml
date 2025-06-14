@@ -15,14 +15,26 @@ jobs:
     - name: Checkout del repositorio
       uses: actions/checkout@v4
 
-    - name: Configurar entorno MinGW
-      uses: egor-tensin/setup-mingw@v2
-      with:
-        platform: x64
+    - name: Install Chocolatey
+      shell: pwsh
+      run: |
+        Set-ExecutionPolicy Bypass -Scope Process -Force
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+        iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+    - name: Install MinGW
+      shell: pwsh
+      run: choco install mingw -y --no-progress
+
+    - name: Add MinGW to PATH
+      shell: pwsh
+      run: |
+        $mingwPath = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin"
+        echo "::add-path::$mingwPath"
 
     - name: Compilar vulnerable.c a vuln.exe
-      run: |
-        gcc vulnerable.c -o vuln.exe
+      shell: cmd
+      run: gcc vulnerable.c -o vuln.exe
         
     - name: Subir vuln.exe como artefacto
       uses: actions/upload-artifact@v4
