@@ -1,27 +1,31 @@
-name: Compilar binario PE vulnerable
+name: Compilar vulnerable.c a vuln.exe
 
 on:
   push:
+    branches: [ "main" ]
+  pull_request:
     branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-latest
-    
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Instalar MinGW
-      run: choco install mingw -y
-      
-    - name: Compilar binario vulnerable
-      run: |
-        $gcc = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\gcc.exe"
-        & $gcc vulnerable.c -o vulnerable.exe -fno-stack-protector -Wl --disable-dynamicbase -static
-        
-    - name: Subir artefacto
-      uses: actions/upload-artifact@v4
+    - name: Checkout del repositorio
+      uses: actions/checkout@v4
+
+    - name: Configurar entorno MinGW
+      uses: egor-tensin/setup-mingw@v2
       with:
-        name: vulnerable-binary
-        path: vulnerable.exe
+        platform: x64
+
+    - name: Compilar vulnerable.c a vuln.exe
+      run: |
+        gcc vulnerable.c -o vuln.exe
+        
+    - name: Subir vuln.exe como artefacto
+      uses: actions/upload-artifact@v3
+      with:
+        name: vuln-executable
+        path: vuln.exe
