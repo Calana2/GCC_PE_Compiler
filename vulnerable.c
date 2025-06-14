@@ -1,13 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <windows.h>
 
 void ret2win() {
     printf("[+] Función ret2win ejecutada!\n");
-    WinExec("cmd.exe", SW_SHOW);
-    // WinExec("powershell.exe", SW_SHOW);
-    
     exit(0); 
 }
 
